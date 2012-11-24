@@ -40,23 +40,42 @@ NSString * const CHOICESKEY = @"PLAYLISTCHOICES";
      */
     
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSMutableArray *specialPlaylistNames = [[userDefaults arrayForKey:CHOICESKEY] mutableCopy];
     
-    NSMutableArray *specialPlaylists = [[userDefaults arrayForKey:CHOICESKEY] mutableCopy];
+    //Check playlists if they are empty; if yes, remove them from the choices.
+    
+    NSMutableArray *emptyPlaylistNames = [NSMutableArray array];
+    for (NSString * playlistName in specialPlaylistNames) {
+        
+        iTunesUserPlaylist *thePlaylist = [playlists objectWithName:playlistName];
+        
+        if (thePlaylist.fileTracks.count == 0) {
+            
+            [emptyPlaylistNames addObject:playlistName];
+            
+            
+        }
+        
+    }
     
     
-    if (specialPlaylists == nil || [specialPlaylists count] == 0) {
+    for (NSString * playlistName in emptyPlaylistNames) {
         
+        [specialPlaylistNames removeObject:playlistName];
         
+    }
+    
+    
+    //
+    
+    if (specialPlaylistNames == nil || [specialPlaylistNames count] == 0) {
         
-        
-        //specialPlaylists = [@[ @"@Almost Forgotten", @"@Never Played", @"@Promoted" ] mutableCopy];
-        specialPlaylists = [NSMutableArray array];
-        
+        specialPlaylistNames = [NSMutableArray array];
         for (NSString *playlistName in [playlists valueForKey:@"name"]) {
             
             if ([playlistName hasPrefix:@"@"]) {
                 
-                [specialPlaylists addObject:playlistName];
+                [specialPlaylistNames addObject:playlistName];
                 
             }
             
@@ -67,12 +86,12 @@ NSString * const CHOICESKEY = @"PLAYLISTCHOICES";
     
     
     
-    NSString *randomPlaylistName = [specialPlaylists grab:1][0];
+    NSString *randomPlaylistName = [specialPlaylistNames grab:1][0];
     
     
     NSLog(@"chosen playlist: %@ #iTunesDJ", randomPlaylistName);
     
-    [userDefaults setObject:specialPlaylists forKey:CHOICESKEY];
+    [userDefaults setObject:specialPlaylistNames forKey:CHOICESKEY];
     [userDefaults synchronize];
     
     
@@ -100,12 +119,33 @@ NSString * const CHOICESKEY = @"PLAYLISTCHOICES";
     [iTunes add:urlsToAdd to:iTunesDJ];
     
     
+    
+    // Mark songs with 3-stars when the song is unrated and has a play count of 5 or more
+    // Songs with less than 5 counts are unfamiliar songs
+    
+    SBElementArray *allSongs = [[playlists objectWithName:@"Music"] fileTracks];
+    NSPredicate *pred = [NSPredicate predicateWithFormat:@"rating == 0 AND playedCount > 4"];
+    NSArray* familiarSongs = [allSongs filteredArrayUsingPredicate:pred];
+    
+    
+    for (iTunesTrack * track in familiarSongs) {
+        track.rating = 60;
+    }
+    
+    // Sync iPod
+    
+    
+    
+    [iTunes update];
+    
+    
+    
+    
     [iTunesDJ playOnce:YES];
     
-    
-
+#ifdef RELEASE
     [[NSApplication sharedApplication] terminate:nil];
-        
+#endif
     
     
     
