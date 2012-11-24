@@ -1,0 +1,318 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		FD2366C715CC0571008172BB /* Icon.iconset in Resources */ = {isa = PBXBuildFile; fileRef = FD2366C615CC0571008172BB /* Icon.iconset */; };
+		FD33E78B15C63B6500B23708 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD33E78A15C63B6500B23708 /* Cocoa.framework */; };
+		FD33E79515C63B6500B23708 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = FD33E79315C63B6500B23708 /* InfoPlist.strings */; };
+		FD33E79715C63B6500B23708 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FD33E79615C63B6500B23708 /* main.m */; };
+		FD33E79B15C63B6500B23708 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = FD33E79915C63B6500B23708 /* Credits.rtf */; };
+		FD33E79E15C63B6500B23708 /* DJAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FD33E79D15C63B6500B23708 /* DJAppDelegate.m */; };
+		FD33E7A115C63B6500B23708 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = FD33E79F15C63B6500B23708 /* MainMenu.xib */; };
+		FD33E7A815C63B9200B23708 /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD33E7A715C63B9200B23708 /* ScriptingBridge.framework */; };
+		FDC06FF715DEA5F100A2DF8D /* NSMutableArray+ConvenienceMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = FDC06FF615DEA5F100A2DF8D /* NSMutableArray+ConvenienceMethods.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		FD2366C615CC0571008172BB /* Icon.iconset */ = {isa = PBXFileReference; lastKnownFileType = folder.iconset; path = Icon.iconset; sourceTree = "<group>"; };
+		FD33E78615C63B6500B23708 /* iTunes DJ.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iTunes DJ.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FD33E78A15C63B6500B23708 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		FD33E78D15C63B6500B23708 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		FD33E78E15C63B6500B23708 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		FD33E78F15C63B6500B23708 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		FD33E79215C63B6500B23708 /* iTunes DJ-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "iTunes DJ-Info.plist"; sourceTree = "<group>"; };
+		FD33E79415C63B6500B23708 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		FD33E79615C63B6500B23708 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		FD33E79815C63B6500B23708 /* iTunes DJ-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iTunes DJ-Prefix.pch"; sourceTree = "<group>"; };
+		FD33E79A15C63B6500B23708 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		FD33E79C15C63B6500B23708 /* DJAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DJAppDelegate.h; sourceTree = "<group>"; };
+		FD33E79D15C63B6500B23708 /* DJAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DJAppDelegate.m; sourceTree = "<group>"; };
+		FD33E7A015C63B6500B23708 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		FD33E7A715C63B9200B23708 /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = System/Library/Frameworks/ScriptingBridge.framework; sourceTree = SDKROOT; };
+		FD33E7A915C63B9F00B23708 /* iTunes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = iTunes.h; path = ../iTunes.h; sourceTree = "<group>"; };
+		FDC06FF515DEA5F100A2DF8D /* NSMutableArray+ConvenienceMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+ConvenienceMethods.h"; sourceTree = "<group>"; };
+		FDC06FF615DEA5F100A2DF8D /* NSMutableArray+ConvenienceMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+ConvenienceMethods.m"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FD33E78315C63B6500B23708 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FD33E7A815C63B9200B23708 /* ScriptingBridge.framework in Frameworks */,
+				FD33E78B15C63B6500B23708 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		FD33E77B15C63B6500B23708 = {
+			isa = PBXGroup;
+			children = (
+				FDC06FF515DEA5F100A2DF8D /* NSMutableArray+ConvenienceMethods.h */,
+				FDC06FF615DEA5F100A2DF8D /* NSMutableArray+ConvenienceMethods.m */,
+				FD33E7A715C63B9200B23708 /* ScriptingBridge.framework */,
+				FD33E79015C63B6500B23708 /* iTunes DJ */,
+				FD33E78915C63B6500B23708 /* Frameworks */,
+				FD33E78715C63B6500B23708 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		FD33E78715C63B6500B23708 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FD33E78615C63B6500B23708 /* iTunes DJ.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FD33E78915C63B6500B23708 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FD33E78A15C63B6500B23708 /* Cocoa.framework */,
+				FD33E78C15C63B6500B23708 /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		FD33E78C15C63B6500B23708 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FD33E78D15C63B6500B23708 /* AppKit.framework */,
+				FD33E78E15C63B6500B23708 /* CoreData.framework */,
+				FD33E78F15C63B6500B23708 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		FD33E79015C63B6500B23708 /* iTunes DJ */ = {
+			isa = PBXGroup;
+			children = (
+				FD33E7A915C63B9F00B23708 /* iTunes.h */,
+				FD33E79C15C63B6500B23708 /* DJAppDelegate.h */,
+				FD33E79D15C63B6500B23708 /* DJAppDelegate.m */,
+				FD33E79F15C63B6500B23708 /* MainMenu.xib */,
+				FD33E79115C63B6500B23708 /* Supporting Files */,
+			);
+			path = "iTunes DJ";
+			sourceTree = "<group>";
+		};
+		FD33E79115C63B6500B23708 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				FD2366C615CC0571008172BB /* Icon.iconset */,
+				FD33E79215C63B6500B23708 /* iTunes DJ-Info.plist */,
+				FD33E79315C63B6500B23708 /* InfoPlist.strings */,
+				FD33E79615C63B6500B23708 /* main.m */,
+				FD33E79815C63B6500B23708 /* iTunes DJ-Prefix.pch */,
+				FD33E79915C63B6500B23708 /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		FD33E78515C63B6500B23708 /* iTunes DJ */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FD33E7A415C63B6500B23708 /* Build configuration list for PBXNativeTarget "iTunes DJ" */;
+			buildPhases = (
+				FD33E78215C63B6500B23708 /* Sources */,
+				FD33E78315C63B6500B23708 /* Frameworks */,
+				FD33E78415C63B6500B23708 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "iTunes DJ";
+			productName = "iTunes DJ";
+			productReference = FD33E78615C63B6500B23708 /* iTunes DJ.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FD33E77D15C63B6500B23708 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = DJ;
+				LastUpgradeCheck = 0440;
+				ORGANIZATIONNAME = Earl;
+			};
+			buildConfigurationList = FD33E78015C63B6500B23708 /* Build configuration list for PBXProject "iTunes DJ" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = FD33E77B15C63B6500B23708;
+			productRefGroup = FD33E78715C63B6500B23708 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FD33E78515C63B6500B23708 /* iTunes DJ */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		FD33E78415C63B6500B23708 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FD33E79515C63B6500B23708 /* InfoPlist.strings in Resources */,
+				FD33E79B15C63B6500B23708 /* Credits.rtf in Resources */,
+				FD33E7A115C63B6500B23708 /* MainMenu.xib in Resources */,
+				FD2366C715CC0571008172BB /* Icon.iconset in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FD33E78215C63B6500B23708 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FD33E79715C63B6500B23708 /* main.m in Sources */,
+				FD33E79E15C63B6500B23708 /* DJAppDelegate.m in Sources */,
+				FDC06FF715DEA5F100A2DF8D /* NSMutableArray+ConvenienceMethods.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		FD33E79315C63B6500B23708 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FD33E79415C63B6500B23708 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		FD33E79915C63B6500B23708 /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FD33E79A15C63B6500B23708 /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		FD33E79F15C63B6500B23708 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FD33E7A015C63B6500B23708 /* en */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		FD33E7A215C63B6500B23708 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		FD33E7A315C63B6500B23708 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		FD33E7A515C63B6500B23708 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "iTunes DJ/iTunes DJ-Prefix.pch";
+				INFOPLIST_FILE = "iTunes DJ/iTunes DJ-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		FD33E7A615C63B6500B23708 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "iTunes DJ/iTunes DJ-Prefix.pch";
+				INFOPLIST_FILE = "iTunes DJ/iTunes DJ-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		FD33E78015C63B6500B23708 /* Build configuration list for PBXProject "iTunes DJ" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FD33E7A215C63B6500B23708 /* Debug */,
+				FD33E7A315C63B6500B23708 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FD33E7A415C63B6500B23708 /* Build configuration list for PBXNativeTarget "iTunes DJ" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FD33E7A515C63B6500B23708 /* Debug */,
+				FD33E7A615C63B6500B23708 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = FD33E77D15C63B6500B23708 /* Project object */;
+}
