@@ -63,11 +63,15 @@ NSString * const SPECIAL_PLAYLISTS_IDS_KEY = @"specialPlaylistsIDs";
     
     
     
-    // Mark songs with 3-stars when the song is unrated and has a play count of 5 or more
+    // Mark songs with 3-stars when the song is unrated (0 or 2 stars) and has a play count of 5 or more
     //    // Songs with less than 5 counts are unfamiliar songs
     SBElementArray *allSongs = [[playlists objectWithName:@"Music"] fileTracks];
-    pred = [NSPredicate predicateWithFormat:@"rating == 0 AND playedCount > 4"];
-     NSArray* familiarSongs = [allSongs filteredArrayUsingPredicate:pred];
+    
+    NSPredicate * rating = [NSPredicate predicateWithFormat:@"rating == 0 OR rating == 40"];
+    NSPredicate * playedCount = [NSPredicate predicateWithFormat:@"playedCount > 4"];
+    NSPredicate *combined = [NSCompoundPredicate andPredicateWithSubpredicates:@[rating, playedCount] ];
+    
+     NSArray* familiarSongs = [allSongs filteredArrayUsingPredicate:combined];
 
 
     for (iTunesTrack * track in familiarSongs) {
