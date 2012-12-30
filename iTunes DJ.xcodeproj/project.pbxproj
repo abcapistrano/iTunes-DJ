@@ -126,7 +126,6 @@
 				FD33E78215C63B6500B23708 /* Sources */,
 				FD33E78315C63B6500B23708 /* Frameworks */,
 				FD33E78415C63B6500B23708 /* Resources */,
-				FDDBCB4C16607A7B00CF9D8E /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -177,22 +176,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		FDDBCB4C16607A7B00CF9D8E /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "open $CONFIGURATION_BUILD_DIR";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		FD33E78215C63B6500B23708 /* Sources */ = {

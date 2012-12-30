@@ -57,8 +57,11 @@ NSString * const SPECIAL_PLAYLISTS_IDS_KEY = @"specialPlaylistsIDs";
     NSUserNotification *note = [NSUserNotification new];
     note.title = @"iTunes DJ";
     note.informativeText = [NSString stringWithFormat:@"Playlist \"%@\" is playing.", chosenPlaylist.name];
-    [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:note];
 
+    NSUserNotificationCenter *nc = [NSUserNotificationCenter defaultUserNotificationCenter];
+
+    [nc deliverNotification:note];
+    [nc setDelegate:self];
     
     [userDefaults setObject:specialPlaylistsIDs forKey:SPECIAL_PLAYLISTS_IDS_KEY];
     [userDefaults synchronize];
@@ -97,6 +100,11 @@ NSString * const SPECIAL_PLAYLISTS_IDS_KEY = @"specialPlaylistsIDs";
     
     
     
+}
+
+- (BOOL)userNotificationCenter:(NSUserNotificationCenter *)center shouldPresentNotification:(NSUserNotification *)notification {
+
+    return YES;
 }
 
 

@@ -10,7 +10,7 @@
 #import "iTunes.h"
 #import <ScriptingBridge/ScriptingBridge.h>
 
-@interface DJAppDelegate : NSObject  <NSApplicationDelegate> 
+@interface DJAppDelegate : NSObject  <NSApplicationDelegate, NSUserNotificationCenterDelegate>
 @property (assign) IBOutlet NSWindow *window;
 
 @end
