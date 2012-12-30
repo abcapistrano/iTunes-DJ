@@ -53,7 +53,12 @@ NSString * const SPECIAL_PLAYLISTS_IDS_KEY = @"specialPlaylistsIDs";
     NSArray *results = [playlists filteredArrayUsingPredicate:pred];
     iTunesUserPlaylist *chosenPlaylist = results[0];
     [chosenPlaylist playOnce:YES];
-    NSLog(@"choice: %@", chosenPlaylist.name);
+
+    NSUserNotification *note = [NSUserNotification new];
+    note.title = @"iTunes DJ";
+    note.informativeText = [NSString stringWithFormat:@"Playlist \"%@\" is playing.", chosenPlaylist.name];
+    [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:note];
+
     
     [userDefaults setObject:specialPlaylistsIDs forKey:SPECIAL_PLAYLISTS_IDS_KEY];
     [userDefaults synchronize];
