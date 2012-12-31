@@ -7,11 +7,11 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "iTunes.h"
-#import <ScriptingBridge/ScriptingBridge.h>
 
+@class iTunesApplication, iTunesUserPlaylist, SBElementArray;
 @interface DJAppDelegate : NSObject  <NSApplicationDelegate, NSUserNotificationCenterDelegate>
-@property (assign) IBOutlet NSWindow *window;
-
+@property (strong) iTunesApplication *iTunes;
+@property (readonly) iTunesUserPlaylist *playlistOfTheDay;
+@property (strong) SBElementArray *playlists;
 @end
 

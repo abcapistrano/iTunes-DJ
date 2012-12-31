@@ -17,29 +17,47 @@ NSString * const LAST_PLAYLIST_SETTING_DATE_KEY = @"lastPlaylistSettingDate";
 
 
 @implementation DJAppDelegate
-
+ 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
-    // Insert code here to initialize your application
-    iTunesApplication *iTunes = [SBApplication applicationWithBundleIdentifier:@"com.apple.itunes"];
-    
-    SBElementArray *playlists = [[[iTunes sources] objectWithName:@"Library"] userPlaylists];
+    self.iTunes = [SBApplication applicationWithBundleIdentifier:@"com.apple.itunes"];
+
+    iTunesUserPlaylist *playlistOfTheDay = self.playlistOfTheDay;
+    [playlistOfTheDay playOnce:YES];
+
+    [self showNotification];
+    [self markFamiliarSongs];
 
     
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+        
+    
+    //sync ipod
+    
+    [self syncIpod];
+    
+#ifdef RELEASE
+    [[NSApplication sharedApplication] terminate:nil];
+#endif
+    
+    
+    
+    
+}
+
+- (iTunesUserPlaylist *) playlistOfTheDay {
+
 
     /* Set a new playlist of the day when:
      - the lastDate is stale
      - the lastDate is nil
-     
+     */
 
 
 
-
-    */
+    self.playlists = [[[self.iTunes sources] objectWithName:@"Library"] userPlaylists];
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 
     NSDate *lastPlaylistSettingDate = [userDefaults objectForKey:LAST_PLAYLIST_SETTING_DATE_KEY];
-
     NSString *playlistOfTheDayID;
 
     if (lastPlaylistSettingDate == nil || ![lastPlaylistSettingDate isSameDayAsDate:[NSDate date]]) {
@@ -51,28 +69,28 @@ NSString * const LAST_PLAYLIST_SETTING_DATE_KEY = @"lastPlaylistSettingDate";
 
             specialPlaylistsIDs = [NSMutableArray array];
 
-            for (iTunesUserPlaylist *p in playlists) {
+            for (iTunesUserPlaylist *p in self.playlists) {
 
                 if ([p.name hasPrefix:@"@"]) {
 
                     [specialPlaylistsIDs addObject:p.persistentID];
 
                 }
-                
+
             }
-            
-            
-            
+
+
+
         }
 
         playlistOfTheDayID = [specialPlaylistsIDs grab:1][0];
         [userDefaults setValuesForKeysWithDictionary:@{
                              PLAYLIST_OF_THE_DAY_KEY:playlistOfTheDayID,
                            SPECIAL_PLAYLISTS_IDS_KEY:specialPlaylistsIDs,
-                         LAST_PLAYLIST_SETTING_DATE_KEY : [NSDate date]} ];
+                     LAST_PLAYLIST_SETTING_DATE_KEY : [NSDate date]} ];
         [userDefaults synchronize];
 
-        
+
     } else {
 
         playlistOfTheDayID = [userDefaults objectForKey:PLAYLIST_OF_THE_DAY_KEY];
@@ -81,55 +99,49 @@ NSString * const LAST_PLAYLIST_SETTING_DATE_KEY = @"lastPlaylistSettingDate";
 
     }
     NSPredicate *pred = [NSPredicate predicateWithFormat:@"persistentID == %@", playlistOfTheDayID];
-    NSArray *results = [playlists filteredArrayUsingPredicate:pred];
+    NSArray *results = [self.playlists filteredArrayUsingPredicate:pred];
     iTunesUserPlaylist *chosenPlaylist = results[0];
-    [chosenPlaylist playOnce:YES];
+    return chosenPlaylist;
+    
+}
 
+- (void) showNotification {
     NSUserNotification *note = [NSUserNotification new];
     note.title = @"iTunes DJ";
-    note.informativeText = [NSString stringWithFormat:@"Playlist \"%@\" is playing.", chosenPlaylist.name];
+    note.informativeText = [NSString stringWithFormat:@"Playlist \"%@\" is playing.", self.playlistOfTheDay.name];
 
     NSUserNotificationCenter *nc = [NSUserNotificationCenter defaultUserNotificationCenter];
-
-    [nc deliverNotification:note];
     [nc setDelegate:self];
+    [nc deliverNotification:note];
+
     
- 
-    
-    
-    
-    
-    
+}
+
+-(void)syncIpod {
+
+    [self.iTunes update];
+}
+
+-(void)markFamiliarSongs {
+
     // Mark songs with 3-stars when the song is unrated (0 or 2 stars) and has a play count of 5 or more
     //    // Songs with less than 5 counts are unfamiliar songs
-    SBElementArray *allSongs = [[playlists objectWithName:@"Music"] fileTracks];
-    
+
     NSPredicate * rating = [NSPredicate predicateWithFormat:@"rating == 0 OR rating == 40"];
     NSPredicate * playedCount = [NSPredicate predicateWithFormat:@"playedCount > 4"];
     NSPredicate *combined = [NSCompoundPredicate andPredicateWithSubpredicates:@[rating, playedCount] ];
-    
-     NSArray* familiarSongs = [allSongs filteredArrayUsingPredicate:combined];
+
+    NSArray* familiarSongs = [self.playlists filteredArrayUsingPredicate:combined];
 
 
     for (iTunesTrack * track in familiarSongs) {
         track.rating = 60;
     }
     
-    
-    
-    //sync ipod
-    
-    [iTunes update];
-    
-    
-#ifdef RELEASE
-    [[NSApplication sharedApplication] terminate:nil];
-#endif
-    
-    
-    
+
     
 }
+
 
 - (BOOL)userNotificationCenter:(NSUserNotificationCenter *)center shouldPresentNotification:(NSUserNotification *)notification {
 
