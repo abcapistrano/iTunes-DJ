@@ -27,7 +27,7 @@ NSString * const LAST_PLAYLIST_SETTING_DATE_KEY = @"lastPlaylistSettingDate";
 
     [self showNotification];
     [self markFamiliarSongs];
-
+    [self removeAlbumRatings];
     
         
     
@@ -131,7 +131,9 @@ NSString * const LAST_PLAYLIST_SETTING_DATE_KEY = @"lastPlaylistSettingDate";
     NSPredicate * playedCount = [NSPredicate predicateWithFormat:@"playedCount > 4"];
     NSPredicate *combined = [NSCompoundPredicate andPredicateWithSubpredicates:@[rating, playedCount] ];
 
-    NSArray* familiarSongs = [self.playlists filteredArrayUsingPredicate:combined];
+
+    self.allTracks = [[self.playlists objectWithName:@"Music"] fileTracks];
+    NSArray* familiarSongs = [self.allTracks filteredArrayUsingPredicate:combined];
 
 
     for (iTunesTrack * track in familiarSongs) {
@@ -140,6 +142,25 @@ NSString * const LAST_PLAYLIST_SETTING_DATE_KEY = @"lastPlaylistSettingDate";
     
 
     
+}
+
+- (void)removeAlbumRatings {
+
+    NSPredicate * rating = [NSPredicate predicateWithFormat:@"albumRating> 0"];
+    SBElementArray *copy =  [self.allTracks copy];
+    [copy filterUsingPredicate:rating];
+
+    [copy arrayByApplyingSelector:@selector(setAlbumRating:) withObject:nil];
+
+
+/*
+    [copy enumerateObjectsUsingBlock:^(iTunesFileTrack* track, NSUInteger idx, BOOL *stop) {
+
+        track.albumRating = 0;
+
+    }];*/
+
+
 }
 
 
