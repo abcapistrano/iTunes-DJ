@@ -10,7 +10,10 @@
 #import "iTunes.h"
 #import <ScriptingBridge/ScriptingBridge.h>
 #import "NSMutableArray+ConvenienceMethods.h"
+#import "NSDate+MoreDates.h"
 NSString * const SPECIAL_PLAYLISTS_IDS_KEY = @"specialPlaylistsIDs";
+NSString * const PLAYLIST_OF_THE_DAY_KEY = @"playlistOfTheDay";
+NSString * const LAST_PLAYLIST_SETTING_DATE_KEY = @"lastPlaylistSettingDate";
 
 
 @implementation DJAppDelegate
@@ -24,32 +27,60 @@ NSString * const SPECIAL_PLAYLISTS_IDS_KEY = @"specialPlaylistsIDs";
 
     
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    NSMutableArray *specialPlaylistsIDs = [[userDefaults arrayForKey:SPECIAL_PLAYLISTS_IDS_KEY] mutableCopy];
-    
-    if (specialPlaylistsIDs == nil || specialPlaylistsIDs.count == 0 ) {
-        
-        
-        specialPlaylistsIDs = [NSMutableArray array];
-        
-        for (iTunesUserPlaylist *p in playlists) {
-            
-            if ([p.name hasPrefix:@"@"]) {
-                
-                [specialPlaylistsIDs addObject:p.persistentID];
+
+    /* Set a new playlist of the day when:
+     - the lastDate is stale
+     - the lastDate is nil
+     
+
+
+
+
+    */
+
+    NSDate *lastPlaylistSettingDate = [userDefaults objectForKey:LAST_PLAYLIST_SETTING_DATE_KEY];
+
+    NSString *playlistOfTheDayID;
+
+    if (lastPlaylistSettingDate == nil || ![lastPlaylistSettingDate isSameDayAsDate:[NSDate date]]) {
+
+
+        NSMutableArray *specialPlaylistsIDs = [[userDefaults arrayForKey:SPECIAL_PLAYLISTS_IDS_KEY] mutableCopy];
+        if (specialPlaylistsIDs == nil || specialPlaylistsIDs.count == 0 ) {
+
+
+            specialPlaylistsIDs = [NSMutableArray array];
+
+            for (iTunesUserPlaylist *p in playlists) {
+
+                if ([p.name hasPrefix:@"@"]) {
+
+                    [specialPlaylistsIDs addObject:p.persistentID];
+
+                }
                 
             }
             
+            
+            
         }
+
+        playlistOfTheDayID = [specialPlaylistsIDs grab:1][0];
+        [userDefaults setValuesForKeysWithDictionary:@{
+                             PLAYLIST_OF_THE_DAY_KEY:playlistOfTheDayID,
+                           SPECIAL_PLAYLISTS_IDS_KEY:specialPlaylistsIDs,
+                         LAST_PLAYLIST_SETTING_DATE_KEY : [NSDate date]} ];
+        [userDefaults synchronize];
+
         
-        
-        
+    } else {
+
+        playlistOfTheDayID = [userDefaults objectForKey:PLAYLIST_OF_THE_DAY_KEY];
+
+
+
     }
-    
-    //
-    
-    NSString *randomID = [specialPlaylistsIDs grab:1][0];
-    NSPredicate *pred = [NSPredicate predicateWithFormat:@"persistentID == %@", randomID];
-    
+    NSPredicate *pred = [NSPredicate predicateWithFormat:@"persistentID == %@", playlistOfTheDayID];
     NSArray *results = [playlists filteredArrayUsingPredicate:pred];
     iTunesUserPlaylist *chosenPlaylist = results[0];
     [chosenPlaylist playOnce:YES];
@@ -63,9 +94,7 @@ NSString * const SPECIAL_PLAYLISTS_IDS_KEY = @"specialPlaylistsIDs";
     [nc deliverNotification:note];
     [nc setDelegate:self];
     
-    [userDefaults setObject:specialPlaylistsIDs forKey:SPECIAL_PLAYLISTS_IDS_KEY];
-    [userDefaults synchronize];
-    
+ 
     
     
     
