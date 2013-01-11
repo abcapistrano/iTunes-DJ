@@ -71,7 +71,7 @@ NSString * const LAST_PLAYLIST_SETTING_DATE_KEY = @"lastPlaylistSettingDate";
 
             for (iTunesUserPlaylist *p in self.playlists) {
 
-                if ([p.name hasPrefix:@"@"]) {
+                if ([p.name hasPrefix:@"#"]) {
 
                     [specialPlaylistsIDs addObject:p.persistentID];
 
@@ -151,14 +151,6 @@ NSString * const LAST_PLAYLIST_SETTING_DATE_KEY = @"lastPlaylistSettingDate";
     [copy filterUsingPredicate:rating];
 
     [copy arrayByApplyingSelector:@selector(setAlbumRating:) withObject:nil];
-
-
-/*
-    [copy enumerateObjectsUsingBlock:^(iTunesFileTrack* track, NSUInteger idx, BOOL *stop) {
-
-        track.albumRating = 0;
-
-    }];*/
 
 
 }
