@@ -35,12 +35,6 @@ NSString * const LAST_PLAYLIST_SETTING_DATE_KEY = @"lastPlaylistSettingDate";
     
     [self syncIpod];
     
-#ifdef RELEASE
-    [[NSApplication sharedApplication] terminate:nil];
-#endif
-    
-    
-    
     
 }
 
