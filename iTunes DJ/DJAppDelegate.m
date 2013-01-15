@@ -24,7 +24,6 @@ NSString * const LAST_PLAYLIST_SETTING_DATE_KEY = @"lastPlaylistSettingDate";
 
     iTunesUserPlaylist *playlistOfTheDay = self.playlistOfTheDay;
     [playlistOfTheDay playOnce:YES];
-
     [self showNotification];
     [self markFamiliarSongs];
     [self removeAlbumRatings];
@@ -99,12 +98,15 @@ NSString * const LAST_PLAYLIST_SETTING_DATE_KEY = @"lastPlaylistSettingDate";
     
 }
 
+
+
 - (void) showNotification {
     NSUserNotification *note = [NSUserNotification new];
     note.title = @"iTunes DJ";
     note.informativeText = [NSString stringWithFormat:@"Playlist \"%@\" is playing.", self.playlistOfTheDay.name];
 
     NSUserNotificationCenter *nc = [NSUserNotificationCenter defaultUserNotificationCenter];
+    [nc removeAllDeliveredNotifications];
     [nc setDelegate:self];
     [nc deliverNotification:note];
 
