@@ -17,9 +17,36 @@ NSString * const LAST_PLAYLIST_SETTING_DATE_KEY = @"lastPlaylistSettingDate";
 
 
 @implementation DJAppDelegate
- 
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
+
+- (id)init
 {
+    self = [super init];
+    if (self) {
+
+
+        NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+
+        [nc addObserver:self selector:@selector(do) name:NSApplicationDidBecomeActiveNotification object:NSApp];
+        [nc addObserver:self selector:@selector(do) name:NSApplicationDidFinishLaunchingNotification object:NSApp];
+
+
+    }
+    return self;
+}
+
+- (void) dealloc {
+
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    [nc removeObserver:self];
+
+
+}
+
+- (void) do {
+
+
+    [[NSProcessInfo processInfo] disableAutomaticTermination:@"Working"];
+
     self.iTunes = [SBApplication applicationWithBundleIdentifier:@"com.apple.itunes"];
 
     iTunesUserPlaylist *playlistOfTheDay = self.playlistOfTheDay;
@@ -27,15 +54,19 @@ NSString * const LAST_PLAYLIST_SETTING_DATE_KEY = @"lastPlaylistSettingDate";
     [self showNotification];
     [self markFamiliarSongs];
     [self removeAlbumRatings];
-    
-        
-    
+
+
+
     //sync ipod
-    
+
     [self syncIpod];
-    
-    
+
+
+    [[NSProcessInfo processInfo] enableAutomaticTermination:@"Working"];
+
 }
+
+
 
 - (iTunesUserPlaylist *) playlistOfTheDay {
 
