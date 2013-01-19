@@ -50,7 +50,28 @@ NSString * const LAST_PLAYLIST_SETTING_DATE_KEY = @"lastPlaylistSettingDate";
     self.iTunes = [SBApplication applicationWithBundleIdentifier:@"com.apple.itunes"];
 
     iTunesUserPlaylist *playlistOfTheDay = self.playlistOfTheDay;
-    [playlistOfTheDay playOnce:YES];
+
+
+
+    iTunesPlaylist *currentPlaylist = (iTunesUserPlaylist*)self.iTunes.currentPlaylist;
+    if ([playlistOfTheDay.persistentID isEqualToString:currentPlaylist.persistentID]) {
+
+
+        iTunesEPlS playerState = self.iTunes.playerState;
+        if (playerState == iTunesEPlSPaused || playerState == iTunesEPlSStopped) {
+            [self.iTunes playpause];
+
+        }
+
+    } else {
+
+        [playlistOfTheDay playOnce:YES];
+
+    }
+
+
+
+    
     [self showNotification];
     [self markFamiliarSongs];
     [self removeAlbumRatings];
@@ -125,6 +146,10 @@ NSString * const LAST_PLAYLIST_SETTING_DATE_KEY = @"lastPlaylistSettingDate";
     NSPredicate *pred = [NSPredicate predicateWithFormat:@"persistentID == %@", playlistOfTheDayID];
     NSArray *results = [self.playlists filteredArrayUsingPredicate:pred];
     iTunesUserPlaylist *chosenPlaylist = results[0];
+
+
+
+
     return chosenPlaylist;
     
 }
