@@ -91,64 +91,77 @@ NSString * const LAST_PLAYLIST_SETTING_DATE_KEY = @"lastPlaylistSettingDate";
 
 - (iTunesUserPlaylist *) playlistOfTheDay {
 
-
-    /* Set a new playlist of the day when:
-     - the lastDate is stale
-     - the lastDate is nil
-     */
-
-
-
+    NSInteger dayofYear = [[NSCalendar currentCalendar] ordinalityOfUnit:NSDayCalendarUnit inUnit:NSYearCalendarUnit forDate:[NSDate date]];
+    iTunesUserPlaylist *chosenPlaylist;
     self.playlists = [[[self.iTunes sources] objectWithName:@"Library"] userPlaylists];
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
 
-    NSDate *lastPlaylistSettingDate = [userDefaults objectForKey:LAST_PLAYLIST_SETTING_DATE_KEY];
-    NSString *playlistOfTheDayID;
+    if (dayofYear % 2 == 1) {
 
-    if (lastPlaylistSettingDate == nil || ![lastPlaylistSettingDate isSameDayAsDate:[NSDate date]]) {
+        //play #Fresh
 
-
-        NSMutableArray *specialPlaylistsIDs = [[userDefaults arrayForKey:SPECIAL_PLAYLISTS_IDS_KEY] mutableCopy];
-        if (specialPlaylistsIDs == nil || specialPlaylistsIDs.count == 0 ) {
-
-
-            specialPlaylistsIDs = [NSMutableArray array];
-
-            for (iTunesUserPlaylist *p in self.playlists) {
-
-                if ([p.name hasPrefix:@"#"]) {
-
-                    [specialPlaylistsIDs addObject:p.persistentID];
-
-                }
-
-            }
-
-
-
-        }
-
-        playlistOfTheDayID = [specialPlaylistsIDs grab:1][0];
-        [userDefaults setValuesForKeysWithDictionary:@{
-                             PLAYLIST_OF_THE_DAY_KEY:playlistOfTheDayID,
-                           SPECIAL_PLAYLISTS_IDS_KEY:specialPlaylistsIDs,
-                     LAST_PLAYLIST_SETTING_DATE_KEY : [NSDate date]} ];
-        [userDefaults synchronize];
-
+        NSPredicate *pred = [NSPredicate predicateWithFormat:@"name == %@", @"#Fresh"];
+        
+        NSArray *results = [self.playlists filteredArrayUsingPredicate:pred];
+        chosenPlaylist = results[0];
 
     } else {
 
-        playlistOfTheDayID = [userDefaults objectForKey:PLAYLIST_OF_THE_DAY_KEY];
+
+        /* Set a new playlist of the day when:
+         - the lastDate is stale
+         - the lastDate is nil
+         */
+
+        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+
+        NSDate *lastPlaylistSettingDate = [userDefaults objectForKey:LAST_PLAYLIST_SETTING_DATE_KEY];
+        NSString *playlistOfTheDayID;
+
+        if (lastPlaylistSettingDate == nil || ![lastPlaylistSettingDate isSameDayAsDate:[NSDate date]]) {
+
+
+            NSMutableArray *specialPlaylistsIDs = [[userDefaults arrayForKey:SPECIAL_PLAYLISTS_IDS_KEY] mutableCopy];
+            if (specialPlaylistsIDs == nil || specialPlaylistsIDs.count == 0 ) {
+
+
+                specialPlaylistsIDs = [NSMutableArray array];
+
+                for (iTunesUserPlaylist *p in self.playlists) {
+
+                    if ([p.name hasPrefix:@"#"] && ![p.name isEqualToString:@"#Fresh"]) {
+
+                        [specialPlaylistsIDs addObject:p.persistentID];
+
+                    }
+
+                }
 
 
 
+            }
+
+            playlistOfTheDayID = [specialPlaylistsIDs grab:1][0];
+            [userDefaults setValuesForKeysWithDictionary:@{
+                                 PLAYLIST_OF_THE_DAY_KEY:playlistOfTheDayID,
+                               SPECIAL_PLAYLISTS_IDS_KEY:specialPlaylistsIDs,
+                         LAST_PLAYLIST_SETTING_DATE_KEY : [NSDate date]} ];
+            [userDefaults synchronize];
+
+
+        } else {
+            
+            playlistOfTheDayID = [userDefaults objectForKey:PLAYLIST_OF_THE_DAY_KEY];
+            
+            
+            
+        }
+        NSPredicate *pred = [NSPredicate predicateWithFormat:@"persistentID == %@", playlistOfTheDayID];
+        NSArray *results = [self.playlists filteredArrayUsingPredicate:pred];
+        chosenPlaylist = results[0];
+
+
+        
     }
-    NSPredicate *pred = [NSPredicate predicateWithFormat:@"persistentID == %@", playlistOfTheDayID];
-    NSArray *results = [self.playlists filteredArrayUsingPredicate:pred];
-    iTunesUserPlaylist *chosenPlaylist = results[0];
-
-
-
 
     return chosenPlaylist;
     
@@ -170,7 +183,7 @@ NSString * const LAST_PLAYLIST_SETTING_DATE_KEY = @"lastPlaylistSettingDate";
 }
 
 -(void)syncIpod {
-
+    
     [self.iTunes update];
 }
 
