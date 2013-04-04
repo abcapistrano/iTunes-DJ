@@ -9,8 +9,10 @@
 #import "DJAppDelegate.h"
 #import "iTunes.h"
 #import <ScriptingBridge/ScriptingBridge.h>
-#import "NSMutableArray+ConvenienceMethods.h"
 #import "NSDate+MoreDates.h"
+#import "NSURL+FileManagement.h"
+#import "MTRandom.h"
+
 NSString * const SPECIAL_PLAYLISTS_IDS_KEY = @"specialPlaylistsIDs";
 NSString * const PLAYLIST_OF_THE_DAY_KEY = @"playlistOfTheDay";
 NSString * const LAST_PLAYLIST_SETTING_DATE_KEY = @"lastPlaylistSettingDate";
@@ -23,35 +25,29 @@ NSString * const LAST_PLAYLIST_SETTING_DATE_KEY = @"lastPlaylistSettingDate";
     self = [super init];
     if (self) {
 
-
-        NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-
-        [nc addObserver:self selector:@selector(do) name:NSApplicationDidBecomeActiveNotification object:NSApp];
-        [nc addObserver:self selector:@selector(do) name:NSApplicationDidFinishLaunchingNotification object:NSApp];
-
+        _iTunes = [SBApplication applicationWithBundleIdentifier:@"com.apple.itunes"];
+        _playlists = [[[_iTunes sources] objectWithName:@"Library"] userPlaylists];
+        _allTracks = [[_playlists objectWithName:@"Music"] fileTracks];
 
     }
     return self;
 }
 
-- (void) dealloc {
 
-    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-    [nc removeObserver:self];
+- (void) applicationDidFinishLaunching:(NSNotification *)notification {
 
 
-}
-
-- (void) do {
-
-
-    [[NSProcessInfo processInfo] disableAutomaticTermination:@"Working"];
-
-    self.iTunes = [SBApplication applicationWithBundleIdentifier:@"com.apple.itunes"];
 
     iTunesUserPlaylist *playlistOfTheDay = self.playlistOfTheDay;
 
+    if ([playlistOfTheDay.name isEqualToString:@"#Fresh"]) {
 
+        NSUInteger count = playlistOfTheDay.fileTracks.count;
+        if (count == 0) {
+            [self importNewAlbum];
+        }
+
+    }
 
     iTunesPlaylist *currentPlaylist = (iTunesUserPlaylist*)self.iTunes.currentPlaylist;
     if ([playlistOfTheDay.persistentID isEqualToString:currentPlaylist.persistentID]) {
@@ -69,22 +65,116 @@ NSString * const LAST_PLAYLIST_SETTING_DATE_KEY = @"lastPlaylistSettingDate";
 
     }
 
-
-
-    
     [self showNotification];
+    [self removeComputedRatings];
     [self markFamiliarSongs];
-    [self removeAlbumRatings];
-
-
-
-    //sync ipod
-
     [self syncIpod];
+    
+    [NSApp terminate:self];
 
 
-    [[NSProcessInfo processInfo] enableAutomaticTermination:@"Working"];
 
+
+}
+
+- (void) importNewAlbum {
+    [NSApp activateIgnoringOtherApps:YES];
+    NSOpenPanel* openPanel = [NSOpenPanel new];
+    openPanel.canChooseDirectories = YES;
+    openPanel.canChooseFiles = NO;
+    openPanel.message = @"Choose an album:";
+
+    NSURL* url = [NSURL fileURLWithPath:@"/Users/earltagra/Music/New Albums"];
+    openPanel.directoryURL = url;
+
+
+    NSUInteger result = [openPanel runModal];
+
+    if (result == NSFileHandlingPanelOKButton) {
+
+        NSURL* chosenDirectory = openPanel.URLs[0];
+
+        [chosenDirectory.files enumerateObjectsUsingBlock:^(NSURL* file, NSUInteger idx, BOOL *stop) {
+
+            //goal: delete files with *.m3u extension
+            NSString *extension = [file pathExtension];
+            if ([extension isEqualToString:@"m3u"]) {
+
+                [file trashFile];
+
+            }
+
+
+
+
+        }];
+
+
+        iTunesUserPlaylist *music = [self.playlists objectWithName:@"Music"];
+        NSArray *tracksAdded = (NSArray *)[self.iTunes add:@[chosenDirectory] to:music];
+
+        void(^rateTracks)(iTunesFileTrack *, NSUInteger, BOOL *) = ^(iTunesFileTrack * track, NSUInteger idx, BOOL* stop) {
+
+            track.rating = 40;
+
+        };
+
+        [tracksAdded enumerateObjectsUsingBlock:rateTracks];
+
+        NSUInteger maxFreshPlaylistCount = 100;
+        NSUInteger runningCount = tracksAdded.count;
+
+        NSSortDescriptor *sd = [NSSortDescriptor sortDescriptorWithKey:@"dateAdded" ascending:YES];
+
+
+        iTunesUserPlaylist *playlist2011 = [self.playlists objectWithName:@"2011"];
+        NSUInteger count2011 = playlist2011.fileTracks.count;
+        if (count2011 == 0) {
+            [playlist2011 delete];
+        } else {
+
+
+            NSArray *sorted = [playlist2011.fileTracks.get sortedArrayUsingDescriptors:@[sd]];
+            NSUInteger max = ceil((maxFreshPlaylistCount - runningCount) / 2);
+            runningCount += max;
+            NSArray *sub = [sorted subarrayWithRange:NSMakeRange(0, max)];
+            [sub enumerateObjectsUsingBlock:rateTracks];
+
+        }
+
+        iTunesUserPlaylist *playlist2012 = [self.playlists objectWithName:@"2012"];
+        NSUInteger count2012 = playlist2012.fileTracks.count;
+        if (count2012 == 0) {
+            [playlist2012 delete];
+        } else {
+
+
+            NSArray *sorted = [playlist2012.fileTracks.get sortedArrayUsingDescriptors:@[sd]];
+            NSUInteger max = maxFreshPlaylistCount - runningCount;
+            runningCount += max;
+            NSArray *sub = [sorted subarrayWithRange:NSMakeRange(0, max)];
+            [sub enumerateObjectsUsingBlock:rateTracks];
+
+        }
+
+        // add songs from the forgotten
+
+        //            NSPredicate * predicate = [NSPredicate predicateWithFormat:@"rating >= 60"];
+        //            NSSortDescriptor *sd2 = [NSSortDescriptor sortDescriptorWithKey:@"playedDate" ascending:YES];
+        //            NSArray* filtered = [self.allTracks filteredArrayUsingPredicate:predicate];
+        //            NSArray* sorted = [filtered sortedArrayUsingDescriptors:@[sd2]];
+        //            NSUInteger max = maxFreshPlaylistCount - runningCount;
+        //            NSArray *sub = [sorted subarrayWithRange:NSMakeRange(0, max)];
+        //            [sub enumerateObjectsUsingBlock:rateTracks];            
+        
+        
+        
+        [chosenDirectory trashFile];
+
+
+        
+    }
+    
 }
 
 
@@ -93,9 +183,10 @@ NSString * const LAST_PLAYLIST_SETTING_DATE_KEY = @"lastPlaylistSettingDate";
 
     NSInteger dayofYear = [[NSCalendar currentCalendar] ordinalityOfUnit:NSDayCalendarUnit inUnit:NSYearCalendarUnit forDate:[NSDate date]];
     iTunesUserPlaylist *chosenPlaylist;
-    self.playlists = [[[self.iTunes sources] objectWithName:@"Library"] userPlaylists];
+    
 
-    if (dayofYear % 2 == 1) {
+  if (dayofYear % 2 == 1) {
+
 
         //play #Fresh
 
@@ -104,7 +195,15 @@ NSString * const LAST_PLAYLIST_SETTING_DATE_KEY = @"lastPlaylistSettingDate";
         NSArray *results = [self.playlists filteredArrayUsingPredicate:pred];
         chosenPlaylist = results[0];
 
-    } else {
+ 
+            
+
+
+        }
+
+        
+
+    else {
 
 
         /* Set a new playlist of the day when:
@@ -192,13 +291,8 @@ NSString * const LAST_PLAYLIST_SETTING_DATE_KEY = @"lastPlaylistSettingDate";
     // Mark songs with 3-stars when the song is unrated (0 or 2 stars) and has a play count of 5 or more
     //    // Songs with less than 5 counts are unfamiliar songs
 
-    NSPredicate * rating = [NSPredicate predicateWithFormat:@"rating == 0 OR rating == 40"];
-    NSPredicate * playedCount = [NSPredicate predicateWithFormat:@"playedCount > 4"];
-    NSPredicate *combined = [NSCompoundPredicate andPredicateWithSubpredicates:@[rating, playedCount] ];
-
-
-    self.allTracks = [[self.playlists objectWithName:@"Music"] fileTracks];
-    NSArray* familiarSongs = [self.allTracks filteredArrayUsingPredicate:combined];
+    NSPredicate * predicate = [NSPredicate predicateWithFormat:@"rating != 20 AND rating <= 40 AND playedCount >= 5"];
+    NSArray* familiarSongs = [self.allTracks filteredArrayUsingPredicate:predicate];
 
 
     for (iTunesTrack * track in familiarSongs) {
@@ -209,13 +303,26 @@ NSString * const LAST_PLAYLIST_SETTING_DATE_KEY = @"lastPlaylistSettingDate";
     
 }
 
-- (void)removeAlbumRatings {
+- (void)removeComputedRatings {
 
-    NSPredicate * rating = [NSPredicate predicateWithFormat:@"albumRating> 0"];
+    NSPredicate * rating = [NSPredicate predicateWithFormat:@"albumRatingKind == %@ AND albumRating > 0", [NSAppleEventDescriptor descriptorWithEnumCode:iTunesERtKComputed]];
     SBElementArray *copy =  [self.allTracks copy];
     [copy filterUsingPredicate:rating];
+    NSArray * results = [copy get];
+    [results enumerateObjectsUsingBlock:^(iTunesFileTrack *track, NSUInteger idx, BOOL *stop) {
+        track.albumRating = 1;
 
-    [copy arrayByApplyingSelector:@selector(setAlbumRating:) withObject:nil];
+    }];
+
+    rating = [NSPredicate predicateWithFormat:@"ratingKind == %@ AND rating > 0", [NSAppleEventDescriptor descriptorWithEnumCode:iTunesERtKComputed]];
+    copy =  [self.allTracks copy];
+    [copy filterUsingPredicate:rating];
+    results = [copy get];
+    [results enumerateObjectsUsingBlock:^(iTunesFileTrack *track, NSUInteger idx, BOOL *stop) {
+        track.rating = 1;
+
+    }];
+    
 
 
 }

@@ -30,9 +30,5 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
-	<key>LSUIElement</key>
-	<true/>
-	<key>NSSupportsAutomaticTermination</key>
-	<true/>
 </dict>
 </plist>

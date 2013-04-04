@@ -10,9 +10,9 @@
 
 @class iTunesApplication, iTunesUserPlaylist, SBElementArray;
 @interface DJAppDelegate : NSObject  <NSApplicationDelegate, NSUserNotificationCenterDelegate>
-@property (strong) iTunesApplication *iTunes;
+@property (strong, readonly) iTunesApplication *iTunes;
 @property (readonly) iTunesUserPlaylist *playlistOfTheDay;
-@property (strong) SBElementArray *playlists;
+@property (strong, readonly) SBElementArray *playlists;
 @property (strong) SBElementArray *allTracks;
 @end
 
