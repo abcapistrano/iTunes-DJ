@@ -37,7 +37,6 @@ NSString * const LAST_PLAYLIST_SETTING_DATE_KEY = @"lastPlaylistSettingDate";
 - (void) applicationDidFinishLaunching:(NSNotification *)notification {
 
 
-
     iTunesUserPlaylist *playlistOfTheDay = self.playlistOfTheDay;
 
     if ([playlistOfTheDay.name isEqualToString:@"#Fresh"]) {
@@ -78,103 +77,88 @@ NSString * const LAST_PLAYLIST_SETTING_DATE_KEY = @"lastPlaylistSettingDate";
 }
 
 - (void) importNewAlbum {
-    [NSApp activateIgnoringOtherApps:YES];
-    NSOpenPanel* openPanel = [NSOpenPanel new];
-    openPanel.canChooseDirectories = YES;
-    openPanel.canChooseFiles = NO;
-    openPanel.message = @"Choose an album:";
-
-    NSURL* url = [NSURL fileURLWithPath:@"/Users/earltagra/Music/New Albums"];
-    openPanel.directoryURL = url;
-
-
-    NSUInteger result = [openPanel runModal];
-
-    if (result == NSFileHandlingPanelOKButton) {
-
-        NSURL* chosenDirectory = openPanel.URLs[0];
-
-        [chosenDirectory.files enumerateObjectsUsingBlock:^(NSURL* file, NSUInteger idx, BOOL *stop) {
-
-            //goal: delete files with *.m3u extension
-            NSString *extension = [file pathExtension];
-            if ([extension isEqualToString:@"m3u"]) {
-
-                [file trashFile];
-
-            }
-
-
-
-
-        }];
-
-
-        iTunesUserPlaylist *music = [self.playlists objectWithName:@"Music"];
-        NSArray *tracksAdded = (NSArray *)[self.iTunes add:@[chosenDirectory] to:music];
-
-        void(^rateTracks)(iTunesFileTrack *, NSUInteger, BOOL *) = ^(iTunesFileTrack * track, NSUInteger idx, BOOL* stop) {
-
-            track.rating = 40;
-
-        };
-
-        [tracksAdded enumerateObjectsUsingBlock:rateTracks];
-
-        NSUInteger maxFreshPlaylistCount = 100;
-        NSUInteger runningCount = tracksAdded.count;
-
-        NSSortDescriptor *sd = [NSSortDescriptor sortDescriptorWithKey:@"dateAdded" ascending:YES];
-
-
-        iTunesUserPlaylist *playlist2011 = [self.playlists objectWithName:@"2011"];
-        NSUInteger count2011 = playlist2011.fileTracks.count;
-        if (count2011 == 0) {
-            [playlist2011 delete];
-        } else {
-
-
-            NSArray *sorted = [playlist2011.fileTracks.get sortedArrayUsingDescriptors:@[sd]];
-            NSUInteger max = ceil((maxFreshPlaylistCount - runningCount) / 2);
-            runningCount += max;
-            NSArray *sub = [sorted subarrayWithRange:NSMakeRange(0, max)];
-            [sub enumerateObjectsUsingBlock:rateTracks];
-
-        }
-
-        iTunesUserPlaylist *playlist2012 = [self.playlists objectWithName:@"2012"];
-        NSUInteger count2012 = playlist2012.fileTracks.count;
-        if (count2012 == 0) {
-            [playlist2012 delete];
-        } else {
-
-
-            NSArray *sorted = [playlist2012.fileTracks.get sortedArrayUsingDescriptors:@[sd]];
-            NSUInteger max = maxFreshPlaylistCount - runningCount;
-            runningCount += max;
-            NSArray *sub = [sorted subarrayWithRange:NSMakeRange(0, max)];
-            [sub enumerateObjectsUsingBlock:rateTracks];
-
-        }
-
-        // add songs from the forgotten
-
-        //            NSPredicate * predicate = [NSPredicate predicateWithFormat:@"rating >= 60"];
-        //            NSSortDescriptor *sd2 = [NSSortDescriptor sortDescriptorWithKey:@"playedDate" ascending:YES];
-        //            NSArray* filtered = [self.allTracks filteredArrayUsingPredicate:predicate];
-        //            NSArray* sorted = [filtered sortedArrayUsingDescriptors:@[sd2]];
-        //            NSUInteger max = maxFreshPlaylistCount - runningCount;
-        //            NSArray *sub = [sorted subarrayWithRange:NSMakeRange(0, max)];
-        //            [sub enumerateObjectsUsingBlock:rateTracks];            
-        
-        
-        
-        [chosenDirectory trashFile];
-
-
-        
-    }
+    NSURL* newAlbumsDir = [NSURL fileURLWithPath:@"/Users/earltagra/Music/New Albums"];
+    NSPredicate *pred = [NSPredicate predicateWithFormat:@"isDirectory == YES && files.@count > 1"];
+    NSArray *sortedAlbums = [[newAlbumsDir.files filteredArrayUsingPredicate:pred] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"lastPathComponent" ascending:YES]]];
     
+    NSURL* chosenDirectory = sortedAlbums[0];
+
+    [chosenDirectory.files enumerateObjectsUsingBlock:^(NSURL* file, NSUInteger idx, BOOL *stop) {
+
+        //goal: delete files with *.m3u extension
+        NSString *extension = [file pathExtension];
+        if ([extension isEqualToString:@"m3u"]) {
+
+            [file trashFile];
+
+        }
+
+
+
+
+    }];
+
+
+    iTunesUserPlaylist *music = [self.playlists objectWithName:@"Music"];
+    NSArray *tracksAdded = (NSArray *)[self.iTunes add:@[chosenDirectory] to:music];
+
+    void(^rateTracks)(iTunesFileTrack *, NSUInteger, BOOL *) = ^(iTunesFileTrack * track, NSUInteger idx, BOOL* stop) {
+
+        track.rating = 40;
+
+    };
+
+    [tracksAdded enumerateObjectsUsingBlock:rateTracks];
+
+    NSUInteger maxFreshPlaylistCount = 100;
+    NSUInteger runningCount = tracksAdded.count;
+
+    NSSortDescriptor *sd = [NSSortDescriptor sortDescriptorWithKey:@"dateAdded" ascending:YES];
+
+
+    iTunesUserPlaylist *playlist2011 = [self.playlists objectWithName:@"2011"];
+    NSUInteger count2011 = playlist2011.fileTracks.count;
+    if (count2011 == 0) {
+        [playlist2011 delete];
+    } else {
+
+
+        NSArray *sorted = [playlist2011.fileTracks.get sortedArrayUsingDescriptors:@[sd]];
+        NSUInteger max = ceil((maxFreshPlaylistCount - runningCount) / 2);
+        runningCount += max;
+        NSArray *sub = [sorted subarrayWithRange:NSMakeRange(0, MIN(max, sorted.count) )];
+        [sub enumerateObjectsUsingBlock:rateTracks];
+
+    }
+
+    iTunesUserPlaylist *playlist2012 = [self.playlists objectWithName:@"2012"];
+    NSUInteger count2012 = playlist2012.fileTracks.count;
+    if (count2012 == 0) {
+        [playlist2012 delete];
+    } else {
+
+
+        NSArray *sorted = [playlist2012.fileTracks.get sortedArrayUsingDescriptors:@[sd]];
+        NSUInteger max = maxFreshPlaylistCount - runningCount;
+        runningCount += max;
+        NSArray *sub = [sorted subarrayWithRange:NSMakeRange(0, MIN(max, sorted.count) )];
+        [sub enumerateObjectsUsingBlock:rateTracks];
+
+    }
+
+    // add songs from the forgotten
+
+    //            NSPredicate * predicate = [NSPredicate predicateWithFormat:@"rating >= 60"];
+    //            NSSortDescriptor *sd2 = [NSSortDescriptor sortDescriptorWithKey:@"playedDate" ascending:YES];
+    //            NSArray* filtered = [self.allTracks filteredArrayUsingPredicate:predicate];
+    //            NSArray* sorted = [filtered sortedArrayUsingDescriptors:@[sd2]];
+    //            NSUInteger max = maxFreshPlaylistCount - runningCount;
+    //            NSArray *sub = [sorted subarrayWithRange:NSMakeRange(0, MIN(max, sorted.count) )];
+    //            [sub enumerateObjectsUsingBlock:rateTracks];
+
+
+
+    [chosenDirectory trashFile];    
 }
 
 

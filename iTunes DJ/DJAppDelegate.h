@@ -13,6 +13,6 @@
 @property (strong, readonly) iTunesApplication *iTunes;
 @property (readonly) iTunesUserPlaylist *playlistOfTheDay;
 @property (strong, readonly) SBElementArray *playlists;
-@property (strong) SBElementArray *allTracks;
+@property (strong, readonly) SBElementArray *allTracks;
 @end
 
