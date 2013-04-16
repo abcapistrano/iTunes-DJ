@@ -13,8 +13,9 @@
 		FD33E79715C63B6500B23708 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FD33E79615C63B6500B23708 /* main.m */; };
 		FD33E79B15C63B6500B23708 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = FD33E79915C63B6500B23708 /* Credits.rtf */; };
 		FD33E79E15C63B6500B23708 /* DJAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FD33E79D15C63B6500B23708 /* DJAppDelegate.m */; };
-		FD33E7A115C63B6500B23708 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = FD33E79F15C63B6500B23708 /* MainMenu.xib */; };
 		FD33E7A815C63B9200B23708 /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD33E7A715C63B9200B23708 /* ScriptingBridge.framework */; };
+		FD373C02171D57D900E901E0 /* TrashedSongsManager.xib in Resources */ = {isa = PBXBuildFile; fileRef = FD373C01171D57D900E901E0 /* TrashedSongsManager.xib */; };
+		FD373C05171D59BB00E901E0 /* DJTrashedSongsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FD373C04171D59BB00E901E0 /* DJTrashedSongsManager.m */; };
 		FD5918C5170CDBD600803AF1 /* NSURL+FileManagement.m in Sources */ = {isa = PBXBuildFile; fileRef = FD5918C3170CDBD600803AF1 /* NSURL+FileManagement.m */; };
 		FD5918C8170CDBFF00803AF1 /* MTRandom.m in Sources */ = {isa = PBXBuildFile; fileRef = FD5918C7170CDBF800803AF1 /* MTRandom.m */; };
 		FD5918CB170CDC2D00803AF1 /* NSDate+MoreDates.m in Sources */ = {isa = PBXBuildFile; fileRef = FD5918CA170CDC1E00803AF1 /* NSDate+MoreDates.m */; };
@@ -34,9 +35,11 @@
 		FD33E79A15C63B6500B23708 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
 		FD33E79C15C63B6500B23708 /* DJAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DJAppDelegate.h; sourceTree = "<group>"; };
 		FD33E79D15C63B6500B23708 /* DJAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DJAppDelegate.m; sourceTree = "<group>"; };
-		FD33E7A015C63B6500B23708 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		FD33E7A715C63B9200B23708 /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = System/Library/Frameworks/ScriptingBridge.framework; sourceTree = SDKROOT; };
 		FD33E7A915C63B9F00B23708 /* iTunes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = iTunes.h; path = ../iTunes.h; sourceTree = "<group>"; };
+		FD373C01171D57D900E901E0 /* TrashedSongsManager.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TrashedSongsManager.xib; sourceTree = "<group>"; };
+		FD373C03171D59BB00E901E0 /* DJTrashedSongsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DJTrashedSongsManager.h; sourceTree = "<group>"; };
+		FD373C04171D59BB00E901E0 /* DJTrashedSongsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DJTrashedSongsManager.m; sourceTree = "<group>"; };
 		FD5918C3170CDBD600803AF1 /* NSURL+FileManagement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSURL+FileManagement.m"; path = "../Headers/NSURL+FileManagement.m"; sourceTree = "<group>"; };
 		FD5918C4170CDBD600803AF1 /* NSURL+FileManagement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSURL+FileManagement.h"; path = "../Headers/NSURL+FileManagement.h"; sourceTree = "<group>"; };
 		FD5918C6170CDBF800803AF1 /* MTRandom.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MTRandom.h; path = ../Headers/MTRandom.h; sourceTree = "<group>"; };
@@ -107,7 +110,9 @@
 				FD33E7A915C63B9F00B23708 /* iTunes.h */,
 				FD33E79C15C63B6500B23708 /* DJAppDelegate.h */,
 				FD33E79D15C63B6500B23708 /* DJAppDelegate.m */,
-				FD33E79F15C63B6500B23708 /* MainMenu.xib */,
+				FD373C01171D57D900E901E0 /* TrashedSongsManager.xib */,
+				FD373C03171D59BB00E901E0 /* DJTrashedSongsManager.h */,
+				FD373C04171D59BB00E901E0 /* DJTrashedSongsManager.m */,
 				FD33E79115C63B6500B23708 /* Supporting Files */,
 			);
 			path = "iTunes DJ";
@@ -180,8 +185,8 @@
 			files = (
 				FD33E79515C63B6500B23708 /* InfoPlist.strings in Resources */,
 				FD33E79B15C63B6500B23708 /* Credits.rtf in Resources */,
-				FD33E7A115C63B6500B23708 /* MainMenu.xib in Resources */,
 				FD2366C715CC0571008172BB /* Icon.iconset in Resources */,
+				FD373C02171D57D900E901E0 /* TrashedSongsManager.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -197,6 +202,7 @@
 				FD5918C5170CDBD600803AF1 /* NSURL+FileManagement.m in Sources */,
 				FD5918CB170CDC2D00803AF1 /* NSDate+MoreDates.m in Sources */,
 				FD5918C8170CDBFF00803AF1 /* MTRandom.m in Sources */,
+				FD373C05171D59BB00E901E0 /* DJTrashedSongsManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -217,14 +223,6 @@
 				FD33E79A15C63B6500B23708 /* en */,
 			);
 			name = Credits.rtf;
-			sourceTree = "<group>";
-		};
-		FD33E79F15C63B6500B23708 /* MainMenu.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				FD33E7A015C63B6500B23708 /* en */,
-			);
-			name = MainMenu.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

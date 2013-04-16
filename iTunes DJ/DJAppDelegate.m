@@ -12,13 +12,17 @@
 #import "NSDate+MoreDates.h"
 #import "NSURL+FileManagement.h"
 #import "MTRandom.h"
+#import "DJTrashedSongsManager.h"
 
 NSString * const SPECIAL_PLAYLISTS_IDS_KEY = @"specialPlaylistsIDs";
 NSString * const PLAYLIST_OF_THE_DAY_KEY = @"playlistOfTheDay";
 NSString * const LAST_PLAYLIST_SETTING_DATE_KEY = @"lastPlaylistSettingDate";
 
 
-@implementation DJAppDelegate
+@implementation DJAppDelegate {
+
+    DJTrashedSongsManager *_manager;
+}
 
 - (id)init
 {
@@ -67,6 +71,7 @@ NSString * const LAST_PLAYLIST_SETTING_DATE_KEY = @"lastPlaylistSettingDate";
     [self showNotification];
     [self removeComputedRatings];
     [self markFamiliarSongs];
+    [self deleteTrash];
     [self syncIpod];
     
     [NSApp terminate:self];
@@ -74,6 +79,42 @@ NSString * const LAST_PLAYLIST_SETTING_DATE_KEY = @"lastPlaylistSettingDate";
 
 
 
+}
+
+- (void) deleteTrash {
+
+    NSPredicate * rating = [NSPredicate predicateWithFormat:@"rating == 20"];
+    SBElementArray *copy =  [self.allTracks copy];
+    [copy filterUsingPredicate:rating];
+    NSArray * results = [copy get];
+
+    _manager = [[DJTrashedSongsManager alloc] initWithSongs:results];
+
+    NSWindow* window = [_manager window];
+    [window center];
+
+    if ([NSApp runModalForWindow:window] == NSOKButton) {
+        [results enumerateObjectsUsingBlock:^(iTunesFileTrack *track, NSUInteger idx, BOOL *stop) {
+
+            if ([track.location trashFile]) {
+
+                [track delete];
+
+                
+            };
+
+            
+            
+        }];
+
+
+        
+    } 
+
+
+    
+
+    
 }
 
 - (void) importNewAlbum {

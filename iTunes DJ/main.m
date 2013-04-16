@@ -7,8 +7,18 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "DJAppDelegate.h"
 
 int main(int argc, char *argv[])
 {
-    return NSApplicationMain(argc, (const char **)argv);
+
+    NSApplication * application = [NSApplication sharedApplication];
+    DJAppDelegate *delegate = [[DJAppDelegate alloc] init];
+    [application setDelegate:delegate];
+    [application run];
+
+    return EXIT_SUCCESS;
+
+
+
 }

@@ -8,12 +8,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iTunes DJ/DJAppDelegate.m"
-         timestampString = "386743621.910675"
+         timestampString = "387802492.689471"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "312"
-         endingLineNumber = "312"
-         landmarkName = "-importNewAlbum"
+         startingLineNumber = "353"
+         endingLineNumber = "353"
+         landmarkName = "-removeComputedRatings"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>
